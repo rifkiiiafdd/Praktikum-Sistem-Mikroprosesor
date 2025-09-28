@@ -1,0 +1,51 @@
+#include <Arduino.h>
+
+#define RELAY_CTRL_PIN  22   // Pin ke input modul relay
+#define RELAY_FEEDBACK_PIN  25   // Pin membaca kontak output relay (aman/logika)
+
+const unsigned long PERIOD = 1000; // Periode sinyal 1 detik (frekuensi 0.5 Hz)
+unsigned long lastToggle = 0;
+bool relayState = false;
+
+unsigned long tControl = 0;   // Waktu saat sinyal kendali berubah
+unsigned long tResponse = 0;  // Waktu saat output relay terdeteksi berubah
+int lastFeedback = 0;
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(RELAY_CTRL_PIN, OUTPUT);
+  pinMode(RELAY_FEEDBACK_PIN, INPUT_PULLUP); // Atur sesuai wiring
+  Serial.println("Pengukuran Waktu Respon Relay");
+}
+
+void loop() {
+  unsigned long now = millis();
+
+  // ====== Bangkitkan sinyal kotak ======
+  if (now - lastToggle >= PERIOD) {
+    relayState = !relayState;             // toggle HIGH/LOW
+    digitalWrite(RELAY_CTRL_PIN, relayState);
+    lastToggle = now;
+
+    tControl = now; // Catat waktu perubahan sinyal kendali
+    Serial.print("Kontrol Relay -> ");
+    Serial.println(relayState ? "HIGH" : "LOW");
+  }
+
+  // ====== Baca output relay ======
+  int feedback = digitalRead(RELAY_FEEDBACK_PIN);
+
+  // Deteksi perubahan pada output relay
+  if (feedback != lastFeedback) {
+    tResponse = millis();
+    unsigned long delayTime = tResponse - tControl;
+
+    Serial.print("Output Relay berubah ke ");
+    Serial.print(feedback);
+    Serial.print(" | Waktu respon = ");
+    Serial.print(delayTime);
+    Serial.println(" ms");
+
+    lastFeedback = feedback;
+  }
+}
