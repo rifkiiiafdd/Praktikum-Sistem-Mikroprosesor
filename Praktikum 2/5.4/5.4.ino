@@ -12,7 +12,7 @@ unsigned long waktu_akhir = 0;
 unsigned long interval = 0;
 float rata_rata = 0;
 
-int n = 10000; // jumlah pengukuran
+int n = 90000; // jumlah pengukuran
 
 volatile int adc_result_local;
 
@@ -20,8 +20,11 @@ void setup() {
   // Inisialisasi pin output digital
     pinMode(TOGGLE_PIN, OUTPUT);
 
-    analogSetWidth(9); 
+    // analogSetWidth(9); 
+    analogReadResolution(12);
   // analogSetWidth(12);
+  Serial.begin(115200);
+  Serial.println("=== Mengukur Kecepatan ADC dengan software  ===");
 
 }
 
@@ -40,6 +43,6 @@ void loop() {
     rata_rata = (float)interval / n;
     Serial.print("Waktu Konversi ADC (us): ");
     Serial.println(rata_rata);  
-    delay(3000);
+    delay(500);
 
 }

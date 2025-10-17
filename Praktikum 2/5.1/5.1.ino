@@ -6,18 +6,18 @@
 int pinADC1 = 34;   //adc 1
 int pinADC2 = 27;   //adc 2
 int adcValue = 0;  
-int resolusi = 12;
+int resolusi =12;
 
 void setup() {
   Serial.begin(115200);       
   analogReadResolution(resolusi);  
-  analogSetAttenuation(ADC_0db); 
-//   analogSetAttenuation(ADC_11db); 
+  // analogSetAttenuation(ADC_0db); 
+  analogSetAttenuation(ADC_11db); 
 
 }
 
 void loop() {
-  adcValue = analogRead(pinADC1); 
+  adcValue = analogRead(pinADC2); 
   Serial.print("ADC Value: ");
   Serial.println(adcValue);      
   delay(500);                     

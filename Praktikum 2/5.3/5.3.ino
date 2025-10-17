@@ -10,8 +10,9 @@ void setup() {
   // Inisialisasi pin output digital
     pinMode(TOGGLE_PIN, OUTPUT);
 
-    analogSetWidth(9); 
+    // analogSetWidth(9); 
   // analogSetWidth(12);
+  analogReadResolution(12);
 
 }
 

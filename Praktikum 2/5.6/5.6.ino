@@ -5,18 +5,22 @@
 
 
 #include "driver/dac.h"
-const int DAC_PIN = 25; 
+const int pinOutputDAC = 25;                 
+const dac_channel_t kanalDAC = DAC_CHANNEL_1;
 
 
 unsigned long waktu_awal = 0;
 unsigned long waktu_akhir = 0;
 unsigned long interval = 0;
 float rata_rata = 0;
-int n = 10000; // jumlah pengukuran
+int n = 100000; // jumlah pengukuran
 
 void setup() {
+   Serial.begin(115200);
+  delay(1000);
+  dac_output_enable(kanalDAC);
 
-    dac_output_enable(DAC_CHANNEL_1);
+    // dac_output_enable(DAC_CHANNEL_1);
 
 }
 
@@ -27,12 +31,12 @@ void loop() {
 
     for (int i = 0; i < n; i++) {
         // variasi 1   :
-        dacWrite(DAC_PIN, 0);
-        dacWrite(DAC_PIN, 255);
+        // dacWrite(pinOutputDAC, 0);    
+        // dacWrite(pinOutputDAC, 255);
 
-        // Variasi 2   :
-        dac_output_voltage(DAC_CHANNEL_1, 0);
-        dac_output_voltage(DAC_CHANNEL_1, 255);
+        //variasi 2
+        dac_output_voltage(kanalDAC, 0);    
+        dac_output_voltage(kanalDAC, 255); 
     }
   
 
@@ -41,6 +45,6 @@ void loop() {
     rata_rata = (float)interval / (2 * n); // karena ada 2 penulisan DAC tiap loop
     Serial.print("Waktu Konversi DAC (us): ");
     Serial.println(rata_rata);  
-    delay(3000);
+    delay(500);
 
 }
